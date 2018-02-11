@@ -5,8 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Response\" />
-    <Folder Include="Repositories\" />
+    <Compile Remove="Repositories\**" />
+    <Compile Remove="Response\**" />
+    <EmbeddedResource Remove="Repositories\**" />
+    <EmbeddedResource Remove="Response\**" />
+    <None Remove="Repositories\**" />
+    <None Remove="Response\**" />
   </ItemGroup>
 
   <ItemGroup>
