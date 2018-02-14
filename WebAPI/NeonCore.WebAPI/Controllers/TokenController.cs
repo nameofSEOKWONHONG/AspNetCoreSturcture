@@ -9,7 +9,6 @@ using System.Text;
 
 namespace NeonCore.WebAPI.Controllers
 {
-    [Produces("application/json")]
     [Route("api/Token")]
     public class TokenController : Controller
     {
@@ -51,7 +50,7 @@ namespace NeonCore.WebAPI.Controllers
             var token = new JwtSecurityToken(_config["Jwt:Issuer"],
               _config["Jwt:Issuer"],
               claims,
-              expires: DateTime.Now.AddMinutes(30),
+              expires: DateTime.Now.AddMinutes(1),
               signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
@@ -62,7 +61,7 @@ namespace NeonCore.WebAPI.Controllers
             UserModel user = null;
 
             //database access and get user info by username(loginId)
-            if (login.Username == "mario" && login.Password == "secret")
+            if (login.Username == "h20913" && login.Password == "wcw123")
             {
                 user = new UserModel { Name = "Mario Rossi", Email = "mario.rossi@domain.com" };
             }

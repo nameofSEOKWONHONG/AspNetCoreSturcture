@@ -8,13 +8,13 @@ using Neon.Payment.BusinessLayer.Contract;
 using Neon.Payment.Models;
 using NeonCore.Library;
 using NeonCore.Library.Response;
+using NeonCore.WebAPI.Extensions;
 using NLog;
 
 namespace NeonCore.WebAPI.Controllers
 {
-    [Produces("application/json")]
-    [Route("api/Payment")]
-    public class PaymentController : BaseController
+    [Route("api/[controller]")]
+    public class PaymentController : Controller
     {
         IUserInfo _userinfo;
         IOrderBusinessObject _orderBizObj;
@@ -25,12 +25,14 @@ namespace NeonCore.WebAPI.Controllers
             _orderBizObj = orderBizObj;
         }
 
-        public IListModelResponse<TaOrders> GetOrders()
+        [HttpGet]
+        [Route("GetOrders")]
+        public IActionResult GetOrders()
         {
 
-            Logger.Trace("payment.getorders");
-            DbLogger.Trace("payment.getorders");
-            return _orderBizObj.GetOrders(1, 20);
+            //Logger.Trace("payment.getorders");
+            //DbLogger.Trace("payment.getorders");
+            return _orderBizObj.GetOrders(1, 20).ToHttpResponse();
         }
     }
 }

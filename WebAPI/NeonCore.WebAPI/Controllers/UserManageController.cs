@@ -9,8 +9,7 @@ using NeonCore.WebAPI.Extensions;
 
 namespace NeonCore.WebAPI.Controllers
 {
-    [Produces("application/json")]
-    [Route("api/UserManage")]
+    [Route("api/[controller]")]
     public class UserManageController : Controller
     {
         IUserBusinessObject _userBizObj;
@@ -19,6 +18,7 @@ namespace NeonCore.WebAPI.Controllers
             _userBizObj = userBizObj;
         }
 
+        [HttpGet]
         [Route("GetUsers")]
         public async Task<IActionResult> GetUsers()
         {
@@ -29,6 +29,7 @@ namespace NeonCore.WebAPI.Controllers
             return response.ToHttpResponse();
         }
 
+        [HttpGet]
         [Route("GetUser")]
         public async Task<IActionResult> GetUser(int userIdx = 0)
         {
