@@ -10,18 +10,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Filters\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.2" />
-    <PackageReference Include="NLog" Version="4.5.0-rc04" />
-    <PackageReference Include="NLog.Web.AspNetCore" Version="4.5.0-rc2" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="4.4.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="1.1.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="1.1.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.0.0" />  
   </ItemGroup>
 
   <ItemGroup>
@@ -29,6 +31,12 @@
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="wwwroot\**\*;Views;Areas\**\Views;appsettings.json;nlog.config;web.config">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+  
   <ItemGroup>
     <None Include="nlog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -39,6 +47,7 @@
     <ProjectReference Include="..\..\Library\NeonCore.Library\NeonCore.Library.csproj" />
     <ProjectReference Include="..\..\Neon.Payment\Neon.Payment.csproj" />
     <ProjectReference Include="..\..\NeonCore\NeonCore.csproj" />
+    <ProjectReference Include="..\NLog.Targets.ElasticSearch\NLog.Targets.ElasticSearch.csproj" />
   </ItemGroup>
 
 </Project>

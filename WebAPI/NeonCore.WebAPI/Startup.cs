@@ -19,6 +19,10 @@ using Swashbuckle.AspNetCore.Swagger;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System;
+using NLog.Extensions.Logging;
+using NLog.Web;
+using NLog;
+using NeonCore.WebAPI.Filters;
 
 namespace NeonCore.WebAPI
 {
@@ -104,6 +108,8 @@ namespace NeonCore.WebAPI
             services.AddScoped<IUserBusinessObject, UserBusinessObject>();
             services.AddScoped<IOrderBusinessObject, OrderBusinessObject>();
 
+            services.AddScoped<LogFilter>();
+
             services.AddOptions();
 
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
@@ -132,8 +138,15 @@ namespace NeonCore.WebAPI
                 app.UseDeveloperExceptionPage();
             }
 
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
+            //loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            //loggerFactory.AddDebug();
+
+            loggerFactory.AddNLog();
+
+            app.AddNLogWeb();
+
+            LogManager.Configuration.Variables["connectionString"] = Configuration.GetConnectionString("NLogDb");
+            LogManager.Configuration.Variables["configDir"] = @"H:\github-new-mine\AspNetCoreSturcture\WebAPI\NeonCore.WebAPI\bin\Debug\netcoreapp2.0";
 
             app.UseCors("CorsPolicy");
 
