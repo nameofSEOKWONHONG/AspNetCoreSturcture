@@ -8,13 +8,14 @@ using Microsoft.AspNetCore.Mvc;
 namespace NeonCore.WebAPI.Controllers
 {
     [Route("api/[controller]")]
-    public class ValuesController : Controller
+    public class ValuesController : BaseController
     {
         // GET api/values
         [HttpGet]
-        [Authorize]
         public IEnumerable<string> Get()
         {
+            Logger.Info("api/value/get()");
+            DbLogger.Error("api/value/get()");
             return new string[] { "value1", "value2" };
         }
 

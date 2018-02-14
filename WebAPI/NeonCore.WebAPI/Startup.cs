@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿//#define __JWT__
+//#define __CUST_AUTH__
+
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -12,13 +14,12 @@ using Neon.Payment.BusinessLayer.Contract;
 using NeonCore.BusinessLayer;
 using NeonCore.BusinessLayer.Contract;
 using NeonCore.Library;
-using NeonCore.WebAPI.Authentication;
 using Newtonsoft.Json.Serialization;
-using System.Text;
 using Swashbuckle.AspNetCore.Swagger;
-using System.Diagnostics;
-using System.Threading.Tasks;
 using System;
+using System.Diagnostics;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace NeonCore.WebAPI
 {
@@ -45,6 +46,7 @@ namespace NeonCore.WebAPI
             });
 
             #region jwt auth
+#if __JWT__
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -74,24 +76,27 @@ namespace NeonCore.WebAPI
                     }
                 };
             });
+#endif
             #endregion
 
             #region custom auth
-            //services.AddAuthentication(options =>
-            //{
-            //    options.DefaultAuthenticateScheme = CustomAuthOptions.DefaultScheme;
-            //    options.DefaultChallengeScheme = CustomAuthOptions.DefaultScheme;
-            //})
-            //.AddCustomAuth(options =>
-            //{
-            //    options.AuthKey = "a123456789qwerty";
-            //});
+#if __CUST_AUTH__
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = CustomAuthOptions.DefaultScheme;
+                options.DefaultChallengeScheme = CustomAuthOptions.DefaultScheme;
+            })
+            .AddCustomAuth(options =>
+            {
+                options.AuthKey = "a123456789qwerty";
+            });
 
-            //services.AddMvc(options =>
-            //{
-            //    options.Filters.Add(new AuthorizeFilter(new Microsoft.AspNetCore.Authorization.AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build()));
-            //})
-            //.AddJsonOptions(a => a.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(new AuthorizeFilter(new Microsoft.AspNetCore.Authorization.AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build()));
+            })
+            .AddJsonOptions(a => a.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
+#endif
             #endregion
 
             services.AddMvc().AddJsonOptions(a => a.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
@@ -137,8 +142,9 @@ namespace NeonCore.WebAPI
 
             app.UseCors("CorsPolicy");
 
+#if __JWT__ || __CUST_AUTH__
             app.UseAuthentication();
-
+#endif
             app.UseMvc();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.

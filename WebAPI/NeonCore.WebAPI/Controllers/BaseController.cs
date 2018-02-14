@@ -8,8 +8,6 @@ using NLog;
 
 namespace NeonCore.WebAPI.Controllers
 {
-    [Produces("application/json")]
-    [Route("api/Base")]
     public class BaseController : Controller
     {
         protected ILogger Logger { get; }
