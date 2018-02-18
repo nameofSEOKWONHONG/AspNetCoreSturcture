@@ -70,7 +70,7 @@ namespace NLog.Targets.ElasticSearch
         public ElasticSearchTarget()
         {
             Name = "ElasticSearch";
-            Uri = "http://localhost:9200";
+            Uri = "http://localhost:2298";
             DocumentType = "logevent";
             Index = "logstash-${date:format=yyyy.MM.dd}";
             Fields = new List<Field>();

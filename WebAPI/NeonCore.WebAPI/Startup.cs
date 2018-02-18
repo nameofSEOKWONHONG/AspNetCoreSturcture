@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿//#define __JWT__
+//#define __CUST_AUTH__
+
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,16 +17,16 @@ using NeonCore.BusinessLayer;
 using NeonCore.BusinessLayer.Contract;
 using NeonCore.Library;
 using NeonCore.WebAPI.Authentication;
+using NeonCore.WebAPI.Filters;
 using Newtonsoft.Json.Serialization;
-using System.Text;
-using Swashbuckle.AspNetCore.Swagger;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using System;
+using NLog;
 using NLog.Extensions.Logging;
 using NLog.Web;
-using NLog;
-using NeonCore.WebAPI.Filters;
+using Swashbuckle.AspNetCore.Swagger;
+using System;
+using System.Diagnostics;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace NeonCore.WebAPI
 {
@@ -38,6 +42,8 @@ namespace NeonCore.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
@@ -48,7 +54,7 @@ namespace NeonCore.WebAPI
                 .Build());
             });
 
-            #region jwt auth
+#if __JWT__
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -78,25 +84,25 @@ namespace NeonCore.WebAPI
                     }
                 };
             });
-            #endregion
+#endif
 
-            #region custom auth
-            //services.AddAuthentication(options =>
-            //{
-            //    options.DefaultAuthenticateScheme = CustomAuthOptions.DefaultScheme;
-            //    options.DefaultChallengeScheme = CustomAuthOptions.DefaultScheme;
-            //})
-            //.AddCustomAuth(options =>
-            //{
-            //    options.AuthKey = "a123456789qwerty";
-            //});
+#if __CUST_AUTH__
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = CustomAuthOptions.DefaultScheme;
+                options.DefaultChallengeScheme = CustomAuthOptions.DefaultScheme;
+            })
+            .AddCustomAuth(options =>
+            {
+                options.AuthKey = "a123456789qwerty";
+            });
 
-            //services.AddMvc(options =>
-            //{
-            //    options.Filters.Add(new AuthorizeFilter(new Microsoft.AspNetCore.Authorization.AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build()));
-            //})
-            //.AddJsonOptions(a => a.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
-            #endregion
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(new AuthorizeFilter(new Microsoft.AspNetCore.Authorization.AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build()));
+            })
+            .AddJsonOptions(a => a.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
+#endif
 
             services.AddMvc().AddJsonOptions(a => a.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
 
@@ -146,7 +152,7 @@ namespace NeonCore.WebAPI
             app.AddNLogWeb();
 
             LogManager.Configuration.Variables["connectionString"] = Configuration.GetConnectionString("NLogDb");
-            LogManager.Configuration.Variables["configDir"] = @"H:\github-new-mine\AspNetCoreSturcture\WebAPI\NeonCore.WebAPI\bin\Debug\netcoreapp2.0";
+            LogManager.Configuration.Variables["configDir"] = @"H:\github-new-mine\AspNetCoreSturcture\WebAPI\NeonCore.WebAPI\bin\Debug\netcoreapp2.0\Logs";
 
             app.UseCors("CorsPolicy");
 

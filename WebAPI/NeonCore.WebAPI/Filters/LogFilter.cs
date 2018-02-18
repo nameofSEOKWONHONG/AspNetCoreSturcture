@@ -1,9 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace NeonCore.WebAPI.Filters
 {
@@ -11,7 +7,7 @@ namespace NeonCore.WebAPI.Filters
     {
         private readonly ILogger _logger;
 
-        protected LogFilter(ILoggerFactory loggerFactory)
+        public LogFilter(ILoggerFactory loggerFactory)
         {
             _logger = loggerFactory.CreateLogger("LogFilter");
         }
