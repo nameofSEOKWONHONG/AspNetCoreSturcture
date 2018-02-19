@@ -18,6 +18,7 @@ using NeonCore.BusinessLayer.Contract;
 using NeonCore.Library;
 using NeonCore.WebAPI.Authentication;
 using NeonCore.WebAPI.Filters;
+using NeonCore.WebAPI.Middleware;
 using Newtonsoft.Json.Serialization;
 using NLog;
 using NLog.Extensions.Logging;
@@ -148,6 +149,7 @@ namespace NeonCore.WebAPI
             //loggerFactory.AddDebug();
 
             loggerFactory.AddNLog();
+            var logger = loggerFactory.CreateLogger<Startup>();
 
             app.AddNLogWeb();
 
@@ -157,6 +159,14 @@ namespace NeonCore.WebAPI
             app.UseCors("CorsPolicy");
 
             app.UseAuthentication();
+
+            app.UseSampleMiddleware();
+
+            //app.Run(async context =>
+            //{
+            //    logger.LogWarning($"In Run. During RUN, Order : {DateTime.Now}");
+            //    await context.Response.WriteAsync($"In Run. Response from RUN. Order : {DateTime.Now}");
+            //});
 
             app.UseMvc();
 
