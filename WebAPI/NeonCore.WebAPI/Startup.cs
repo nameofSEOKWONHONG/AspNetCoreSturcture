@@ -160,6 +160,7 @@ namespace NeonCore.WebAPI
 
             app.UseAuthentication();
 
+
             app.UseSampleMiddleware();
 
             //app.Run(async context =>

@@ -30,5 +30,22 @@ namespace NeonXUnit.Test
 
             Assert.NotNull(obj);
         }
+
+        [Fact]
+        public void UnitTest2()
+        {
+            var curTimeStamp = GetTimeStamp();
+            var clientIP = "127.0.0.1";
+            var bearerAuth = 
+        }
+
+        public string GetTimeStamp()
+        {
+            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            var now = DateTime.Now;
+            TimeSpan elapsedTime = now - epoch;
+            var time = (long)elapsedTime.TotalSeconds;
+            return Convert.ToString(time);
+        }
     }
 }
